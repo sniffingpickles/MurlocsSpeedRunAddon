@@ -579,6 +579,7 @@ function Murlocs:UI_ShowHistory()
     
     -- Smart position before showing
     self:UI_SmartPosition(self.frames.historyFrame, 600)
+    self.frames.historyFrame:Raise()
     self.frames.historyFrame:Show()
 end
 
@@ -855,6 +856,7 @@ function Murlocs:UI_ShowRunDetails(run)
     
     -- Smart position before showing
     self:UI_SmartPosition(self.frames.runDetailFrame, 500)
+    self.frames.runDetailFrame:Raise()
     self.frames.runDetailFrame:Show()
 end
 
@@ -864,6 +866,7 @@ function Murlocs:UI_ShowExportForRun(run)
     
     if self.frames.exportFrame and self.frames.exportBox then
         self:UI_SmartPosition(self.frames.exportFrame, 500)
+        self.frames.exportFrame:Raise()
         local exportData = self:ExportRun(run)
         self.frames.exportBox:SetText(exportData)
         if self.frames.exportBox.editBox then
@@ -1062,6 +1065,7 @@ function Murlocs:UI_ShowExport()
     
     if self.frames.exportFrame then
         self:UI_SmartPosition(self.frames.exportFrame, 500)
+        self.frames.exportFrame:Raise()
         self:UI_RefreshExport()
         self.frames.exportFrame:Show()
     end
