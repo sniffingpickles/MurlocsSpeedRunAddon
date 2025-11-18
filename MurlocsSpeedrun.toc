@@ -1,0 +1,16 @@
+## Interface: 110002
+## Title: Murlocs Speedrun
+## Notes: Speedrun timer and splits for dungeons and raids.
+## Author: Evan (Muggles)
+## Version: 2.0.0
+## SavedVariablesPerCharacter: MurlocsDB
+## X-Website: https://murlocs.com
+## IconTexture: Interface\AddOns\MurlocsSpeedrun\icon
+
+libs\LibStub\LibStub.lua
+libs\StdUi\StdUi.xml
+
+Murlocs_Data.lua
+Murlocs_UI.lua
+Murlocs_Config.lua
+Murlocs_Core.lua
