@@ -195,12 +195,10 @@ function Murlocs:FormatDelta(delta, short)
     return string.format("%s%s%s%s", color, sign, self:FormatTime(math.abs(delta), short), resetColor)
 end
 
--- Export current run as encoded string
-function Murlocs:ExportCurrentRun()
-    local run = self.currentRun or MurlocsDB.lastRun
-    
+-- Export a specific run as encoded string
+function Murlocs:ExportRun(run)
     if not run then
-        return "No completed run to export"
+        return "No run to export"
     end
     
     -- Build segment array
@@ -241,6 +239,17 @@ function Murlocs:ExportCurrentRun()
     local encoded = self:Base64Encode(json)
     
     return encoded
+end
+
+-- Export current run as encoded string
+function Murlocs:ExportCurrentRun()
+    local run = self.currentRun or MurlocsDB.lastRun
+    
+    if not run then
+        return "No completed run to export"
+    end
+    
+    return self:ExportRun(run)
 end
 
 -- Base64 encoding

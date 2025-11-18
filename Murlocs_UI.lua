@@ -22,6 +22,7 @@ if not StdUi then
     function Murlocs:UI_ToggleMain() end
     function Murlocs:UI_CreateExportFrame() end
     function Murlocs:UI_ShowExport() end
+    function Murlocs:UI_ShowExportForRun() end
     function Murlocs:UI_RefreshExport() end
     function Murlocs:UI_UpdateScale() end
     function Murlocs:UI_UpdateLock() end
@@ -743,6 +744,9 @@ end
 function Murlocs:UI_ShowRunDetails(run)
     if not run then return end
     
+    -- Store run for export
+    self.frames.runDetailExportData = run
+    
     -- Create or get detail frame
     if not self.frames.runDetailFrame then
         local detailFrame = self.StdUi:Window(UIParent, 500, 450, "Run Details")
@@ -757,14 +761,23 @@ function Murlocs:UI_ShowRunDetails(run)
         content:SetPoint("TOPLEFT", 0, 0)
         
         local closeBtn = self.StdUi:Button(detailFrame, 100, 24, "Close")
-        closeBtn:SetPoint("BOTTOM", detailFrame, "BOTTOM", 0, 10)
+        closeBtn:SetPoint("BOTTOMRIGHT", detailFrame, "BOTTOM", -5, 10)
         closeBtn:SetScript("OnClick", function()
             detailFrame:Hide()
+        end)
+        
+        local exportBtn = self.StdUi:Button(detailFrame, 100, 24, "Export")
+        exportBtn:SetPoint("BOTTOMLEFT", detailFrame, "BOTTOM", 5, 10)
+        exportBtn:SetScript("OnClick", function()
+            if self.frames.runDetailExportData then
+                self:UI_ShowExportForRun(self.frames.runDetailExportData)
+            end
         end)
         
         self.frames.runDetailFrame = detailFrame
         self.frames.runDetailContent = content
         self.frames.runDetailScroll = scrollFrame
+        self.frames.runDetailExportBtn = exportBtn
     end
     
     -- Populate details
@@ -836,6 +849,21 @@ function Murlocs:UI_ShowRunDetails(run)
     
     content:SetHeight(math.max(yOffset + 20, 1))
     self.frames.runDetailFrame:Show()
+end
+
+-- Show export popup for a specific run
+function Murlocs:UI_ShowExportForRun(run)
+    self:UI_CreateExportFrame()
+    
+    if self.frames.exportFrame and self.frames.exportBox then
+        local exportData = self:ExportRun(run)
+        self.frames.exportBox:SetText(exportData)
+        if self.frames.exportBox.editBox then
+            self.frames.exportBox.editBox:HighlightText()
+            self.frames.exportBox.editBox:SetFocus()
+        end
+        self.frames.exportFrame:Show()
+    end
 end
 
 -- Create minimap button
