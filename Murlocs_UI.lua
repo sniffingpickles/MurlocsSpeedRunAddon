@@ -865,7 +865,14 @@ function Murlocs:UI_ShowExportForRun(run)
     self:UI_CreateExportFrame()
     
     if self.frames.exportFrame and self.frames.exportBox then
-        self:UI_SmartPosition(self.frames.exportFrame, 500)
+        -- Anchor to bottom of run detail frame if it exists and is shown
+        if self.frames.runDetailFrame and self.frames.runDetailFrame:IsShown() then
+            self.frames.exportFrame:ClearAllPoints()
+            self.frames.exportFrame:SetPoint("TOP", self.frames.runDetailFrame, "BOTTOM", 0, -3)
+        else
+            self:UI_SmartPosition(self.frames.exportFrame, 500)
+        end
+        
         self.frames.exportFrame:Raise()
         local exportData = self:ExportRun(run)
         self.frames.exportBox:SetText(exportData)
