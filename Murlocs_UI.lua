@@ -26,6 +26,7 @@ if not StdUi then
     function Murlocs:UI_RefreshExport() end
     function Murlocs:UI_UpdateScale() end
     function Murlocs:UI_UpdateLock() end
+    function Murlocs:UI_SmartPosition() end
     function Murlocs:UI_SavePosition() end
     function Murlocs:UI_RestorePosition() end
     function Murlocs:UI_RestartRun() end
@@ -575,6 +576,9 @@ end
 function Murlocs:UI_ShowHistory()
     self:UI_CreateHistoryFrame()
     self:UI_PopulateHistory()
+    
+    -- Smart position before showing
+    self:UI_SmartPosition(self.frames.historyFrame, 600)
     self.frames.historyFrame:Show()
 end
 
@@ -848,6 +852,9 @@ function Murlocs:UI_ShowRunDetails(run)
     end
     
     content:SetHeight(math.max(yOffset + 20, 1))
+    
+    -- Smart position before showing
+    self:UI_SmartPosition(self.frames.runDetailFrame, 500)
     self.frames.runDetailFrame:Show()
 end
 
@@ -856,6 +863,7 @@ function Murlocs:UI_ShowExportForRun(run)
     self:UI_CreateExportFrame()
     
     if self.frames.exportFrame and self.frames.exportBox then
+        self:UI_SmartPosition(self.frames.exportFrame, 500)
         local exportData = self:ExportRun(run)
         self.frames.exportBox:SetText(exportData)
         if self.frames.exportBox.editBox then
@@ -979,6 +987,37 @@ function Murlocs:UI_ToggleMain()
     end
 end
 
+-- Smart window positioning
+function Murlocs:UI_SmartPosition(frame, width)
+    local xOffset = 0
+    local spacing = 20
+    
+    -- Check which frames are visible
+    local visibleFrames = {}
+    
+    if self.frames.historyFrame and self.frames.historyFrame:IsShown() then
+        table.insert(visibleFrames, {frame = self.frames.historyFrame, width = 600})
+    end
+    
+    if self.frames.runDetailFrame and self.frames.runDetailFrame:IsShown() then
+        table.insert(visibleFrames, {frame = self.frames.runDetailFrame, width = 500})
+    end
+    
+    if self.frames.exportFrame and self.frames.exportFrame:IsShown() and self.frames.exportFrame ~= frame then
+        table.insert(visibleFrames, {frame = self.frames.exportFrame, width = 500})
+    end
+    
+    -- Calculate offset based on visible frames
+    if #visibleFrames > 0 then
+        -- Position to the right of the last visible frame
+        local lastFrame = visibleFrames[#visibleFrames]
+        xOffset = (lastFrame.width / 2) + spacing + (width / 2)
+    end
+    
+    frame:ClearAllPoints()
+    frame:SetPoint("CENTER", xOffset, 0)
+end
+
 -- Create export popup
 function Murlocs:UI_CreateExportFrame()
     if self.frames.exportFrame then
@@ -986,7 +1025,6 @@ function Murlocs:UI_CreateExportFrame()
     end
     
     local exportFrame = self.StdUi:Window(UIParent, 500, 350, "Murlocs Speedrun Export")
-    exportFrame:SetPoint("CENTER", 0, 0)
     exportFrame:Hide()
     
     self.frames.exportFrame = exportFrame
@@ -1023,6 +1061,7 @@ function Murlocs:UI_ShowExport()
     self:UI_CreateExportFrame()
     
     if self.frames.exportFrame then
+        self:UI_SmartPosition(self.frames.exportFrame, 500)
         self:UI_RefreshExport()
         self.frames.exportFrame:Show()
     end
