@@ -17,6 +17,7 @@ eventFrame:RegisterEvent("CHALLENGE_MODE_COMPLETED")
 eventFrame:RegisterEvent("ENCOUNTER_START")
 eventFrame:RegisterEvent("ENCOUNTER_END")
 eventFrame:RegisterEvent("BOSS_KILL")
+eventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 -- Event handler
 eventFrame:SetScript("OnEvent", function(self, event, ...)
@@ -39,6 +40,8 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
         Murlocs:OnEncounterEnd(...)
     elseif event == "BOSS_KILL" then
         Murlocs:OnBossKill(...)
+    elseif event == "GROUP_ROSTER_UPDATE" then
+        Murlocs:OnGroupRosterUpdate()
     end
 end)
 
@@ -94,7 +97,7 @@ function Murlocs:OnAddonLoaded()
         Murlocs:HandleSlashCommand(msg)
     end
     
-    print("|cff00ff00Murlocs Speedrun v2.0.0|r loaded. Type /murlocs for options.")
+    print("|cff00ff00Murlocs Speedrun v2.1.0|r loaded. Type /murlocs for options.")
     
     -- Show on login if enabled
     if MurlocsDB.settings.showOnLogin then
@@ -274,6 +277,17 @@ function Murlocs:OnEncounterEnd(encounterID, encounterName, difficultyID, groupS
     end
 end
 
+-- Group roster update - Cancel run if someone joins
+function Murlocs:OnGroupRosterUpdate()
+    if self.currentRun and self.currentRun.active then
+        -- Check if we're still solo
+        if not self:IsSolo() then
+            print("|cffff0000Murlocs Speedrun:|r Run cancelled - someone joined your party!")
+            self:EndRun(false)
+        end
+    end
+end
+
 -- Boss kill (fallback)
 function Murlocs:OnBossKill(encounterID, encounterName)
     if self.currentRun and self.currentRun.active then
@@ -388,6 +402,18 @@ end
 -- Start a new run
 function Murlocs:StartRun(ctx)
     if not ctx then return end
+    
+    -- Only allow dungeon runs (not raids)
+    if ctx.instanceType ~= "party" then
+        print("|cffff0000Murlocs Speedrun:|r Only dungeon runs are supported (raids coming soon!)")
+        return
+    end
+    
+    -- Only allow solo runs
+    if not self:IsSolo() then
+        print("|cffff0000Murlocs Speedrun:|r Only solo runs are supported!")
+        return
+    end
     
     local dungeonKey = self:MakeDungeonKey(ctx)
     if not dungeonKey then return end

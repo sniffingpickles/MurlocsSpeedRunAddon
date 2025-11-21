@@ -396,6 +396,13 @@ function Murlocs:GetPlayerInfo()
     }
 end
 
+-- Check if player is solo (no party or raid members)
+function Murlocs:IsSolo()
+    local numGroupMembers = GetNumGroupMembers()
+    -- GetNumGroupMembers returns 0 if solo, 1+ if in party/raid
+    return numGroupMembers == 0
+end
+
 -- Get instance context
 function Murlocs:GetInstanceContext()
     local name, instanceType, difficultyID, difficultyName, maxPlayers, 
