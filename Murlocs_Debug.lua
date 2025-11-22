@@ -1,4 +1,8 @@
 -- Debug window for troubleshooting
+if not Murlocs then
+    Murlocs = {}
+end
+
 local debugFrame = nil
 
 function Murlocs:Debug_Init()
