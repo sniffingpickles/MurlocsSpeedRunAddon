@@ -269,7 +269,10 @@ end
 -- Encounter end
 function Murlocs:OnEncounterEnd(encounterID, encounterName, difficultyID, groupSize, success)
     if self.currentRun and self.currentRun.active and success == 1 then
-        self:AddSegment(encounterName, encounterID)
+        -- Note: Creature display IDs not accessible through WoW Lua API
+        -- Event encounter IDs don't match Journal encounter IDs
+        -- Boss portraits feature will not work without manual mapping
+        self:AddSegment(encounterName, nil)
         
         -- Check if all objectives are complete
         C_Timer.After(1, function()
@@ -306,7 +309,7 @@ function Murlocs:OnBossKill(encounterID, encounterName)
         end
         
         if not alreadyExists then
-            self:AddSegment(encounterName, encounterID)
+            self:AddSegment(encounterName)
             
             -- Check if all objectives are complete
             C_Timer.After(1, function()
@@ -456,7 +459,7 @@ function Murlocs:StartRun(ctx)
 end
 
 -- Add a segment (boss kill, etc.)
-function Murlocs:AddSegment(label, encounterID)
+function Murlocs:AddSegment(label)
     if not self.currentRun or not self.currentRun.active then
         return
     end
@@ -468,28 +471,11 @@ function Murlocs:AddSegment(label, encounterID)
         previousSplit = self.currentRun.segments[#self.currentRun.segments].split
     end
     
-    -- Try to get creature display ID for boss portrait
-    local creatureDisplayId = nil
-    if encounterID then
-        -- Select the encounter first to load its data
-        EJ_SelectEncounter(encounterID)
-        local id, name, description, displayInfo = EJ_GetCreatureInfo(1, encounterID)
-        if displayInfo then
-            creatureDisplayId = displayInfo
-            print(string.format("DEBUG: Boss %s has display ID: %d", label, displayInfo))
-        else
-            print(string.format("DEBUG: No display info for encounter %d (%s)", encounterID, label))
-        end
-    else
-        print(string.format("DEBUG: No encounterID for %s", label))
-    end
-    
     local segment = {
         index = #self.currentRun.segments + 1,
         label = label,
         split = elapsed,
         duration = elapsed - previousSplit,
-        creatureDisplayId = creatureDisplayId,
     }
     
     table.insert(self.currentRun.segments, segment)

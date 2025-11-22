@@ -23,7 +23,6 @@ function Murlocs:Debug_Show()
         for i, seg in ipairs(run.segments) do
             print(string.format("|cffffff00[%d] %s|r", i, seg.label))
             print(string.format("  Split: %.3fs | Duration: %.3fs", seg.split or 0, seg.duration or 0))
-            print(string.format("  Creature Display ID: %s", seg.creatureDisplayId or "nil"))
         end
     else
         print("No segments captured")
@@ -36,17 +35,13 @@ function Murlocs:Debug_Show()
     local segments = {}
     if run.segments then
         for _, seg in ipairs(run.segments) do
-            local s = string.format('{"i":%d,"l":"%s","s":%.3f,"d":%.3f', 
+            local s = string.format('{"i":%d,"l":"%s","s":%.3f,"d":%.3f}', 
                 seg.index, seg.label, seg.split, seg.duration)
-            if seg.creatureDisplayId then
-                s = s .. string.format(',"cid":%d', seg.creatureDisplayId)
-            end
-            s = s .. "}"
             table.insert(segments, s)
         end
     end
     
-    local json = string.format('{"dk":"%s","dn":"%s","seg":[%s],"v":"2.2.0"}',
+    local json = string.format('{"dk":"%s","dn":"%s","seg":[%s],"v":"2.1.0"}',
         run.dungeonKey or "unknown",
         run.instanceName or "unknown",
         table.concat(segments, ","))
