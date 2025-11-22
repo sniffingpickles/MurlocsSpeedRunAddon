@@ -13,5 +13,5 @@ libs\StdUi\StdUi.xml
 Murlocs_Data.lua
 Murlocs_UI.lua
 Murlocs_Config.lua
-Murlocs_Debug.lua
 Murlocs_Core.lua
+Murlocs_Debug.lua
