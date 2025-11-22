@@ -468,10 +468,17 @@ function Murlocs:AddSegment(label, encounterID)
     -- Try to get creature display ID for boss portrait
     local creatureDisplayId = nil
     if encounterID then
+        -- Select the encounter first to load its data
+        EJ_SelectEncounter(encounterID)
         local id, name, description, displayInfo = EJ_GetCreatureInfo(1, encounterID)
         if displayInfo then
             creatureDisplayId = displayInfo
+            print(string.format("DEBUG: Boss %s has display ID: %d", label, displayInfo))
+        else
+            print(string.format("DEBUG: No display info for encounter %d (%s)", encounterID, label))
         end
+    else
+        print(string.format("DEBUG: No encounterID for %s", label))
     end
     
     local segment = {
