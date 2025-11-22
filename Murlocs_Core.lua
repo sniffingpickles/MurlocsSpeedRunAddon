@@ -266,7 +266,7 @@ end
 -- Encounter end
 function Murlocs:OnEncounterEnd(encounterID, encounterName, difficultyID, groupSize, success)
     if self.currentRun and self.currentRun.active and success == 1 then
-        self:AddSegment(encounterName)
+        self:AddSegment(encounterName, encounterID)
         
         -- Check if all objectives are complete
         C_Timer.After(1, function()
@@ -303,7 +303,7 @@ function Murlocs:OnBossKill(encounterID, encounterName)
         end
         
         if not alreadyExists then
-            self:AddSegment(encounterName)
+            self:AddSegment(encounterName, encounterID)
             
             -- Check if all objectives are complete
             C_Timer.After(1, function()
@@ -453,7 +453,7 @@ function Murlocs:StartRun(ctx)
 end
 
 -- Add a segment (boss kill, etc.)
-function Murlocs:AddSegment(label)
+function Murlocs:AddSegment(label, encounterID)
     if not self.currentRun or not self.currentRun.active then
         return
     end
@@ -465,11 +465,21 @@ function Murlocs:AddSegment(label)
         previousSplit = self.currentRun.segments[#self.currentRun.segments].split
     end
     
+    -- Try to get creature display ID for boss portrait
+    local creatureDisplayId = nil
+    if encounterID then
+        local id, name, description, displayInfo = EJ_GetCreatureInfo(1, encounterID)
+        if displayInfo then
+            creatureDisplayId = displayInfo
+        end
+    end
+    
     local segment = {
         index = #self.currentRun.segments + 1,
         label = label,
         split = elapsed,
         duration = elapsed - previousSplit,
+        creatureDisplayId = creatureDisplayId,
     }
     
     table.insert(self.currentRun.segments, segment)

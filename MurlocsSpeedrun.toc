@@ -1,8 +1,8 @@
 ## Interface: 110002
 ## Title: Murlocs Speedrun
-## Notes: Speedrun timer and splits for solo dungeon runs.
+## Notes: Track your solo dungeon speedruns with boss portraits
 ## Author: Evan (Muggles)
-## Version: 2.1.0
+## Version: 2.2.0
 ## SavedVariablesPerCharacter: MurlocsDB
 ## X-Website: https://murlocs.com
 ## IconTexture: Interface\AddOns\MurlocsSpeedrun\icon
