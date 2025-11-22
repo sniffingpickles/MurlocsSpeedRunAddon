@@ -177,6 +177,8 @@ function Murlocs:HandleSlashCommand(msg)
         self:Config_Show()
     elseif msg == "export" then
         self:UI_ShowExport()
+    elseif msg == "debug" then
+        self:Debug_Show()
     elseif msg == "hide" then
         self:UI_HideMain()
     elseif msg == "show" then
@@ -191,6 +193,7 @@ function Murlocs:HandleSlashCommand(msg)
         print("  /murlocs show - Show main window")
         print("  /murlocs hide - Hide main window")
         print("  /murlocs export - Export run data")
+        print("  /murlocs debug - Show debug info")
         print("  /murlocs test <number> - Test UI with X bosses (e.g., /murlocs test 20)")
     else
         self:UI_ToggleMain()
