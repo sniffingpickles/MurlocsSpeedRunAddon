@@ -97,7 +97,7 @@ function Murlocs:OnAddonLoaded()
         Murlocs:HandleSlashCommand(msg)
     end
     
-    print("|cff00ff00Murlocs Speedrun v2.1.0|r loaded. Type /murlocs for options.")
+    print("|cff00ff00Murlocs Speedrun v2.2.0|r loaded. Type /murlocs for options.")
     
     -- Show on login if enabled
     if MurlocsDB.settings.showOnLogin then

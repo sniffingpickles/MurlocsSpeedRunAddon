@@ -205,12 +205,17 @@ function Murlocs:ExportRun(run)
     local segments = {}
     if run.segments then
         for _, seg in ipairs(run.segments) do
-            table.insert(segments, {
+            local segment = {
                 i = seg.index,
                 l = seg.label,
                 s = seg.split,
                 d = seg.duration,
-            })
+            }
+            -- Include creature display ID if available
+            if seg.creatureDisplayId then
+                segment.cid = seg.creatureDisplayId
+            end
+            table.insert(segments, segment)
         end
     end
     
@@ -229,7 +234,7 @@ function Murlocs:ExportRun(run)
         seg = segments,
         src = run.source or "addon_live",
         gb = run.gameBuild,
-        v = "2.0.0"
+        v = "2.2.0"
     }
     
     -- Convert to JSON
