@@ -269,10 +269,7 @@ end
 -- Encounter end
 function Murlocs:OnEncounterEnd(encounterID, encounterName, difficultyID, groupSize, success)
     if self.currentRun and self.currentRun.active and success == 1 then
-        -- Note: Creature display IDs not accessible through WoW Lua API
-        -- Event encounter IDs don't match Journal encounter IDs
-        -- Boss portraits feature will not work without manual mapping
-        self:AddSegment(encounterName, nil)
+        self:AddSegment(encounterName)
         
         -- Check if all objectives are complete
         C_Timer.After(1, function()
